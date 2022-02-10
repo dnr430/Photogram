@@ -13,8 +13,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cos.photogramstart.domain.user.User;
+import com.cos.photogramstart.handler.ex.CustomValidationException;
 import com.cos.photogramstart.service.AuthService;
 import com.cos.photogramstart.web.dto.auth.SignupDto;
 
@@ -29,11 +31,9 @@ public class AuthController {
 
 	private final AuthService authService;
 
-
 //	 public AuthController(AuthService authService) {
 //		 this.authService = authService; 
 //	}
-
 
 	@GetMapping("/auth/signin")
 	public String signinForm() {
@@ -55,20 +55,20 @@ public class AuthController {
 			
 			for(FieldError error : bindingResult.getFieldErrors()) {		// signupDto에서 오류가 발생하면 그 오류를 bindingResult의 getFieldErrors 컬렉션에 모아둔다.
 				errorMap.put(error.getField(), error.getDefaultMessage());
-				System.out.println("=============================");
+				System.out.println("===================");
 				System.out.println(error.getDefaultMessage());
-				System.out.println("=============================");
+				System.out.println("===================");
 			}
+			throw new CustomValidationException("유효성 검사 실패함", errorMap);	// 강제 발생
+		} 
+		else {
+			log.info(signupDto.toString());
+			// User <- SignupDto
+			User user = signupDto.toEntity();
+			log.info(user.toString());
+			User userEntity = authService.Join(user);
+			System.out.println(userEntity);
+			return "auth/signin";
 		}
-		
-		log.info(signupDto.toString());
-		// User <- SignupDto
-		User user = signupDto.toEntity();
-		log.info(user.toString());
-		
-		User userEntity = authService.Join(user);
-		System.out.println(userEntity);
-
-		return "auth/signin";
 	}
 }

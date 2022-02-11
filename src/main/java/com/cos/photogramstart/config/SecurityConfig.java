@@ -22,11 +22,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// super 삭제 - 기존 시큐리티가 가지고 있는 기능이 다 비활성화됨.
 		http.csrf().disable();		// CSRF 토큰 비활성화
 		http.authorizeRequests()
-			.antMatchers("/", "/user/**", "/image/**", "/subscribe/**", "/comment/**").authenticated()
+			.antMatchers("/", "/user/**", "/image/**", "/subscribe/**", "/comment/**").authenticated()	// 이런식의 페이지를 요청한다. 인증이 필요한 페이지인데 인증이 안되어 있다면
 			.anyRequest().permitAll()
 			.and()
 			.formLogin()
-			.loginPage("/auth/signin")
+			.loginPage("/auth/signin")	// GET -> 인증이 필요한 페이지를 요청
+			.loginProcessingUrl("/auth/signin")	// POST -> 스프링 시큐리티가 로그인 프로세스 진행
 			.defaultSuccessUrl("/");
 	}
 

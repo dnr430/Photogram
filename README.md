@@ -1,5 +1,6 @@
 # CloneCoding_Photogram
 
+### 이지업클래스 포토그램만들기
 
 #### 220207 __클론코딩 시작!__
 ###### Git설치, JDK11, STS4 설치, MariaDB 설치 및 설정, Postman, JSON Viewer 설치, 프론트 딴만 완성된 프로젝트 다운로드, yml 파일의 이해

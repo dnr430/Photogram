@@ -6,7 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cos.photogramstart.domain.user.User;
 import com.cos.photogramstart.domain.user.UserRepository;
+import com.cos.photogramstart.handler.ex.CustomException;
 import com.cos.photogramstart.handler.ex.CustomValidationApiException;
+import com.cos.photogramstart.web.dto.user.UserProfileDto;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +18,22 @@ public class UserService {
 	
 	private final UserRepository userRepository;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	@Transactional(readOnly = true)
+	public UserProfileDto userprofile(int pageUserId, int principalId) {	// 회원프로필
+		UserProfileDto dto = new UserProfileDto();
+		
+		// SELECT * FROM image WHERE userId = :userId;
+		User userEntity = userRepository.findById(pageUserId).orElseThrow(() -> {
+			throw new CustomException("해당 프로필 페이지는 없는 페이지입니다.");
+		});
+		
+		dto.setUser(userEntity);
+		dto.setPageOwnerState(pageUserId == principalId);
+		dto.setImageCount(userEntity.getImages().size());
+		
+		return dto;
+	}
 	
 	@Transactional
 	public User editUser(int id, User user) {

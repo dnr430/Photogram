@@ -34,7 +34,13 @@ spring:
   security:
     user:
       name: test
-      password: 1234   
+      password: 1234
+          oauth2:      client:        registration:
+          facebook:
+            client-id: 앱ID
+            client-secret: 앱시크릿코드
+            scope:            - public_profile
+            - email          
 
 file:
   path: C:/workspace/springbootwork/upload/
